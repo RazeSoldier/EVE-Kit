@@ -36,29 +36,6 @@ import java.util.Map;
  * Api version: v1
  */
 public class GetKillMail {
-    public static void main(String[] argv) throws GetAccessTokenException, FetchProtectedResourceException {
-        final String uid = "2112309917";
-        final String clinetID = "81fc45796d15491db2909c2d40f63fc3";
-        final String scope = "esi-killmails.read_killmails.v1";
-        final String callbackURL = "http://localhost/";
-        SSOLogin login = new SSOLogin(clinetID, callbackURL, scope).fetchAccessToken().fetchRefreshingCode();
-        GetCharacterRecentKM s = new GetCharacterRecentKM(uid, login);
-        GetKillMail self = new GetKillMail(login);
-        KillMailTitle kmT = s.fetchKillMail().get(0);
-        KillMail km = self.getKillMail(kmT.getId(), kmT.getHash());
-        System.out.println("KM ID: " + km.getId());
-        System.out.println("时间: " + km.getTime());
-        km.getAttackers().forEach(attacker -> {
-            CharacterInfo characterInfo = null;
-            try {
-                characterInfo = new GetCharacterInfo().getInfo(attacker.getCharacterId());
-            } catch (ConnectionException | ParseException e) {
-                e.printStackTrace();
-            }
-            System.out.println(characterInfo.getName() + " 造成" + attacker.getDamageDone() + "点伤害" + ",是否是最后击杀: " + attacker.isFinalBlow());
-        });
-    }
-
     private SSOLogin loginService;
 
     public GetKillMail(@NotNull SSOLogin loginService) {

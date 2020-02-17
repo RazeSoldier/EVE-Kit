@@ -20,7 +20,6 @@ package razesoldier.esi.killmail;
 import com.alibaba.fastjson.JSON;
 import org.jetbrains.annotations.NotNull;
 import razesoldier.esi.sso.FetchProtectedResourceException;
-import razesoldier.esi.sso.GetAccessTokenException;
 import razesoldier.esi.sso.SSOLogin;
 
 import java.util.ArrayList;
@@ -30,16 +29,6 @@ import java.util.List;
  * Api version: v1
  */
 public class GetCharacterRecentKM {
-    public static void main(String[] argv) throws GetAccessTokenException, FetchProtectedResourceException {
-        final String uid = "2112309917";
-        final String clinetID = "81fc45796d15491db2909c2d40f63fc3";
-        final String callbackURL = "http://localhost/";
-        final String scope = "esi-killmails.read_killmails.v1";
-        SSOLogin login = new SSOLogin(clinetID, callbackURL, scope).fetchAccessToken().fetchRefreshingCode();
-        GetCharacterRecentKM self = new GetCharacterRecentKM(uid, login);
-        System.out.println(self.fetchKillMail());
-    }
-
     final private String uid;
     final private SSOLogin loginService;
 

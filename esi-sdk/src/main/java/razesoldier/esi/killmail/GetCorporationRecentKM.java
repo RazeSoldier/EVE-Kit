@@ -28,16 +28,6 @@ import java.util.List;
 import java.util.Map;
 
 public class GetCorporationRecentKM {
-    public static void main(String[] argv) throws GetAccessTokenException, FetchProtectedResourceException {
-        final String cid = "98608055";
-        final String clinetID = "81fc45796d15491db2909c2d40f63fc3";
-        final String callbackURL = "http://localhost/";
-        final String scope = "esi-killmails.read_corporation_killmails.v1";
-        SSOLogin login = new SSOLogin(clinetID, callbackURL, scope).fetchAccessToken().fetchRefreshingCode();
-        GetCorporationRecentKM self = new GetCorporationRecentKM(cid, login);
-        System.out.println(self.fetchKillMail());
-    }
-
     final private String cid;
     final private SSOLogin loginService;
 

@@ -37,10 +37,6 @@ import java.util.TimeZone;
  * Api version: v4
  */
 public class GetCharacterInfo {
-    public static void main(String[] argv) throws ConnectionException, ParseException {
-        System.out.println(new GetCharacterInfo().getInfo(2112309917));
-    }
-
     private ApiEntryPoint entryPoint;
 
     public GetCharacterInfo() {

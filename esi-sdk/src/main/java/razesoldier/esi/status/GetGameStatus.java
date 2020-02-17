@@ -39,11 +39,6 @@ import java.util.TimeZone;
  * API version: v1
  */
 public class GetGameStatus {
-    public static void main(String[] argv) throws ConnectionException, ParseException {
-        GetGameStatus self = new GetGameStatus();
-        System.out.println("Current players: " + self.getPlayerCount() + ", Startime: " + self.getStartTime());
-    }
-
     private ApiEntryPoint entryPoint;
 
     public GetGameStatus() {

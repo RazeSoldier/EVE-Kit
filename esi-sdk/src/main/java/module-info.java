@@ -24,13 +24,16 @@ module razesoldier.esi {
     requires nanohttpd; // build-in server
     requires fastjson; // Json parser
 
-    opens razesoldier.esi.killmail to fastjson;
     opens razesoldier.esi.character to fastjson;
+    opens razesoldier.esi.killmail to fastjson;
+    opens razesoldier.esi.mail to fastjson;
 
     exports razesoldier.esi.alliance;
     exports razesoldier.esi.character;
-    exports razesoldier.esi.killmail;
-    exports razesoldier.esi.status;
     exports razesoldier.esi.error;
+    exports razesoldier.esi.killmail;
+    exports razesoldier.esi.mail;
+    exports razesoldier.esi.search;
     exports razesoldier.esi.sso;
+    exports razesoldier.esi.status;
 }

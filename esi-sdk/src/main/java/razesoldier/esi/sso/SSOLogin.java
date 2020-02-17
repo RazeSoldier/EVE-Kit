@@ -28,10 +28,13 @@ import com.github.scribejava.core.oauth.OAuth20Service;
 import fi.iki.elonen.NanoHTTPD;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import razesoldier.esi.internal.HttpClientFactory;
 
 import java.io.IOException;
 
 import java.net.*;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,16 +48,6 @@ import java.util.regex.Pattern;
  * For login step, see <a href="https://docs.esi.evetech.net/docs/sso/native_sso_flow.html">docs</a>.
  */
 public class SSOLogin {
-    public static void main(String[] argc) throws Exception {
-        String clientID = "81fc45796d15491db2909c2d40f63fc3";
-        String callbackURL = "http://localhost/";
-        SSOLogin service = new SSOLogin(clientID, callbackURL);
-        Map<String, String> resp = service.fetchProtectedResource(
-                "https://esi.evetech.net/latest/characters/2112309917/killmails/recent/?datasource=tranquility&page=1"
-        );
-        System.out.println(resp.get("body"));
-    }
-
     // The primary reason for using the state parameter is to mitigate CSRF attacks.
     private final String secretState = "secret" + new SecureRandom().nextInt(999_999);
     private final OAuth20Service service; // ESI use OAuth 2.0
@@ -76,7 +69,7 @@ public class SSOLogin {
     }
 
     /**
-     * Try to get a access token.
+     * Try to fetch a access token.
      * @throws GetAccessTokenException Exception thrown if an error occurred while fetch the code
      */
     public SSOLogin fetchAccessToken() throws GetAccessTokenException {
@@ -215,6 +208,17 @@ public class SSOLogin {
         return this;
     }
 
+    public SSOLogin setRefreshToken(@NotNull String refreshToken) {
+        if (accessToken == null) {
+            accessToken = new OAuth2AccessToken("", null, null,
+                    refreshToken, null, null);
+        } else {
+            accessToken = new OAuth2AccessToken(accessToken.getAccessToken(), accessToken.getTokenType(), accessToken.getExpiresIn(),
+                    refreshToken, accessToken.getScope(), accessToken.getRawResponse());
+        }
+        return this;
+    }
+
     public Map<String, String> fetchProtectedResource(@Nullable String url) throws FetchProtectedResourceException {
         final OAuthRequest request = new OAuthRequest(Verb.GET, url);
         service.signRequest(accessToken, request);
@@ -226,5 +230,24 @@ public class SSOLogin {
         } catch (InterruptedException | ExecutionException | IOException e) {
             throw new FetchProtectedResourceException(e);
         }
+    }
+
+    public Map<String, String> postProtectedResource(@NotNull String url, @NotNull String body)
+            throws FetchProtectedResourceException {
+        final HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(url))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + accessToken.getAccessToken())
+                .method("POST", HttpRequest.BodyPublishers.ofString(body))
+                .build();
+        HttpResponse<String> response;
+        try {
+            response = HttpClientFactory.getInstance().getHttpClient().send(httpRequest, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException | InterruptedException e) {
+            throw new FetchProtectedResourceException(e);
+        }
+        Map<String, String> resp = new HashMap<>();
+        resp.put("code", String.valueOf(response.statusCode()));
+        resp.put("body", response.body());
+        return resp;
     }
 }

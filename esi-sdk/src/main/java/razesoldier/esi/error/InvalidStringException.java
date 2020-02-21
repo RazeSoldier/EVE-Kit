@@ -15,14 +15,14 @@
  * http://www.gnu.org/copyleft/gpl.html
  */
 
-package razesoldier.esi.alliance;
+package razesoldier.esi.error;
 
-import razesoldier.esi.error.HttpRequestException;
+public class InvalidStringException extends Exception {
+    public InvalidStringException() {
+        super();
+    }
 
-import java.io.IOException;
-
-class ListAllAlliancesTest {
-    void testStr() throws IOException, InterruptedException, HttpRequestException {
-        new ListAllAlliances().getAllAllianceList();
+    public InvalidStringException(String msg) {
+        super(msg);
     }
 }

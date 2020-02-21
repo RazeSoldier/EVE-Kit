@@ -17,6 +17,8 @@
 
 package razesoldier.esi.character;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.time.ZonedDateTime;
 
 public class CharacterInfo {
@@ -34,6 +36,7 @@ public class CharacterInfo {
 
     CharacterInfo() {}
 
+    @Nullable
     public Integer getAllianceId() {
         return allianceId;
     }

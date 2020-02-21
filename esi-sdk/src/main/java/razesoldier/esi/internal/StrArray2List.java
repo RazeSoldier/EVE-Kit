@@ -18,6 +18,7 @@
 package razesoldier.esi.internal;
 
 import org.jetbrains.annotations.NotNull;
+import razesoldier.esi.error.InvalidStringException;
 
 import java.util.ArrayList;
 import java.util.Arrays;

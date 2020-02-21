@@ -15,14 +15,19 @@
  * http://www.gnu.org/copyleft/gpl.html
  */
 
-package razesoldier.esi.alliance;
+package razesoldier.esi.universe;
 
+import org.junit.jupiter.api.Test;
 import razesoldier.esi.error.HttpRequestException;
 
-import java.io.IOException;
+import static org.junit.jupiter.api.Assertions.*;
 
-class ListAllAlliancesTest {
-    void testStr() throws IOException, InterruptedException, HttpRequestException {
-        new ListAllAlliances().getAllAllianceList();
+public class GetSystemInfoTest {
+    @Test
+    void testQuery() throws HttpRequestException {
+        GetSystemInfo obj = new GetSystemInfo();
+        SystemInfoModel systemInfoModel = obj.query(30004206);
+        assertEquals("4LNE-M", systemInfoModel.getName());
+        assertEquals(-0.5669175386428833, systemInfoModel.getSecurity_status());
     }
 }

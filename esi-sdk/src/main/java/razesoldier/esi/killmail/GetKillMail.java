@@ -19,14 +19,9 @@ package razesoldier.esi.killmail;
 
 import com.alibaba.fastjson.JSON;
 import org.jetbrains.annotations.NotNull;
-import razesoldier.esi.character.CharacterInfo;
-import razesoldier.esi.character.GetCharacterInfo;
-import razesoldier.esi.error.ConnectionException;
 import razesoldier.esi.sso.FetchProtectedResourceException;
-import razesoldier.esi.sso.GetAccessTokenException;
 import razesoldier.esi.sso.SSOLogin;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

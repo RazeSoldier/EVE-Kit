@@ -19,14 +19,14 @@ package razesoldier.esi.character;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import razesoldier.esi.error.ConnectionException;
+import razesoldier.esi.error.HttpRequestException;
 
 import java.text.ParseException;
 import java.time.ZonedDateTime;
 
 public class GetCharacterInfoTest {
     @Test
-    void testSearch() throws ConnectionException, ParseException {
+    void testSearch() throws HttpRequestException, ParseException {
         CharacterInfo info = new GetCharacterInfo().getInfo(2112309917); // 2112309917 is my id :)
         assertEquals("星耀晨曦", info.getTitle());
         assertEquals("Starshine Morning", info.getName());

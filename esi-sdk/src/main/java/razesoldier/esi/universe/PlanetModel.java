@@ -15,14 +15,37 @@
  * http://www.gnu.org/copyleft/gpl.html
  */
 
-package razesoldier.esi.alliance;
+package razesoldier.esi.universe;
 
-import razesoldier.esi.error.HttpRequestException;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.io.IOException;
+public class PlanetModel {
+    private List<Integer> asteroid_belts = new ArrayList<>();
+    private List<Integer> moons = new ArrayList<>();
+    private Integer planet_id;
 
-class ListAllAlliancesTest {
-    void testStr() throws IOException, InterruptedException, HttpRequestException {
-        new ListAllAlliances().getAllAllianceList();
+    public List<Integer> getAsteroid_belts() {
+        return asteroid_belts;
+    }
+
+    public void setAsteroid_belts(List<Integer> asteroid_belts) {
+        this.asteroid_belts = asteroid_belts;
+    }
+
+    public List<Integer> getMoons() {
+        return moons;
+    }
+
+    public void setMoons(List<Integer> moons) {
+        this.moons = moons;
+    }
+
+    public Integer getPlanet_id() {
+        return planet_id;
+    }
+
+    public void setPlanet_id(Integer planet_id) {
+        this.planet_id = planet_id;
     }
 }

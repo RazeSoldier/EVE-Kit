@@ -15,14 +15,16 @@
  * http://www.gnu.org/copyleft/gpl.html
  */
 
-package razesoldier.esi.alliance;
+package razesoldier.esi.error;
 
-import razesoldier.esi.error.HttpRequestException;
+import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
+public class Non200CodeException extends HttpRequestException {
+    public Non200CodeException(@NotNull String url, int statusCode) {
+        super(String.format("Request %s with %d error", url, statusCode));
+    }
 
-class ListAllAlliancesTest {
-    void testStr() throws IOException, InterruptedException, HttpRequestException {
-        new ListAllAlliances().getAllAllianceList();
+    public Non200CodeException(@NotNull String url, int statusCode, @NotNull String msg) {
+        super(String.format("Request %s with %d error: %s", url, statusCode, msg));
     }
 }

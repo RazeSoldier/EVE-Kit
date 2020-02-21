@@ -29,7 +29,7 @@ public class HttpClientFactory {
         httpClient = HttpClient.newBuilder().build();
     }
 
-    public static HttpClientFactory getInstance() {
+    synchronized public static HttpClientFactory getInstance() {
         if (instance == null) {
             instance = new HttpClientFactory();
         }

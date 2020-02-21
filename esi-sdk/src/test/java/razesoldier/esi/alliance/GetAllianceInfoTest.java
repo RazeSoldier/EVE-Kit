@@ -15,14 +15,21 @@
  * http://www.gnu.org/copyleft/gpl.html
  */
 
-package razesoldier.esi.internal;
+package razesoldier.esi.alliance;
 
-public class InvalidStringException extends Exception {
-    public InvalidStringException() {
-        super();
-    }
+import org.junit.jupiter.api.Test;
+import razesoldier.esi.error.HttpRequestException;
+import static org.junit.jupiter.api.Assertions.*;
 
-    public InvalidStringException(String msg) {
-        super(msg);
+import java.text.ParseException;
+
+public class GetAllianceInfoTest {
+    @Test
+    void testQuery() throws HttpRequestException, ParseException {
+        GetAllianceInfo getter = new GetAllianceInfo();
+        AllianceInfo info = getter.query(99009310);
+        assertEquals("VENI VIDI VICI.", info.getName());
+        assertEquals("-VVV-", info.getTicker());
+        assertEquals(98602384, info.getCreatorCorporationId());
     }
 }

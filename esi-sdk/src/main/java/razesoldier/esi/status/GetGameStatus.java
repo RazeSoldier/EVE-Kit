@@ -19,9 +19,10 @@ package razesoldier.esi.status;
 
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.jetbrains.annotations.NotNull;
-import razesoldier.esi.error.ConnectionException;
+import razesoldier.esi.error.HttpRequestException;
+import razesoldier.esi.error.Non200CodeException;
 import razesoldier.esi.internal.HttpClientFactory;
-import razesoldier.esi.internal.InvalidStringException;
+import razesoldier.esi.error.InvalidStringException;
 import razesoldier.esi.internal.StrMap2Map;
 import razesoldier.esi.sso.ApiEntryPoint;
 
@@ -45,33 +46,38 @@ public class GetGameStatus {
         entryPoint = ApiEntryPoint.Tranquility;
     }
 
-    public Integer getPlayerCount() throws ConnectionException {
+    public Integer getPlayerCount() throws HttpRequestException {
         return Integer.valueOf(getData().get("players"));
     }
 
-    public String getServerVersion() throws ConnectionException {
+    public String getServerVersion() throws HttpRequestException {
         return getData().get("server_version");
     }
 
-    public ZonedDateTime getStartTime() throws ConnectionException, ParseException {
+    public ZonedDateTime getStartTime() throws HttpRequestException, ParseException {
         return FastDateFormat.getInstance("yyyy-MM-dd'T'HH:mm:ss'Z'", TimeZone.getTimeZone("UTC+0")).
                 parse(getData().get("start_time")).toInstant().atZone(ZoneId.of("UTC+0"));
     }
 
     @NotNull
-    private Map<String, String> getData() throws ConnectionException {
+    private Map<String, String> getData() throws HttpRequestException {
+        final String url = "https://esi.evetech.net/v1/status/?datasource=" + entryPoint;
         HttpRequest request = HttpRequest.newBuilder().
-                uri(URI.create("https://esi.evetech.net/v1/status/?datasource=" + entryPoint)).build();
+                uri(URI.create(url)).build();
         HttpResponse<String> response;
         try {
             response = HttpClientFactory.getInstance().getHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
-            throw new ConnectionException(e);
+            throw new HttpRequestException(e);
         }
+        if (response.statusCode() != 200) {
+            throw new Non200CodeException(url, response.statusCode(), response.body());
+        }
+
         try {
             return StrMap2Map.convert(response.body());
         } catch (InvalidStringException e) {
-            throw new ConnectionException(e);
+            throw new HttpRequestException(e);
         }
     }
 }

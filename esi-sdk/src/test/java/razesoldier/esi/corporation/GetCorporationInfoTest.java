@@ -15,18 +15,21 @@
  * http://www.gnu.org/copyleft/gpl.html
  */
 
-package razesoldier.esi.error;
+package razesoldier.esi.corporation;
 
-public class ConnectionException extends Exception {
-    public ConnectionException() {
-        super();
-    }
+import org.junit.jupiter.api.Test;
+import razesoldier.esi.error.HttpRequestException;
 
-    public ConnectionException(String msg) {
-        super(msg);
-    }
+import java.text.ParseException;
 
-    public ConnectionException(Throwable cause) {
-        super(cause);
+import static org.junit.jupiter.api.Assertions.*;
+
+public class GetCorporationInfoTest {
+    @Test
+    void testSearch() throws HttpRequestException, ParseException {
+        GetCorporationInfo getter = new GetCorporationInfo();
+        CorporationInfo info = getter.query(98608055);
+        assertEquals(2113820265, info.getCeoId());
+        assertEquals("G.DL", info.getTicker());
     }
 }

@@ -18,9 +18,9 @@
 package razesoldier.esi.internal;
 
 import org.jetbrains.annotations.NotNull;
+import razesoldier.esi.error.InvalidStringException;
 
 import java.util.*;
-import java.util.function.Consumer;
 
 /**
  * This class is used to convert a map represented by a string into a {@link java.util.Map} in Java.

@@ -18,7 +18,8 @@
 package razesoldier.esi.search;
 
 import org.junit.jupiter.api.Test;
-import razesoldier.esi.error.ConnectionException;
+import razesoldier.esi.error.HttpRequestException;
+import razesoldier.esi.error.InvalidStringException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -35,7 +36,7 @@ public class SearchTest {
     }
 
     @Test
-    void testDoSearch() throws ConnectionException {
+    void testDoSearch() throws HttpRequestException, InvalidStringException {
         Search search = new Search();
         Integer id = (Integer) search.doSearch(new SearchType[]{SearchType.solarSystem}, "1QH-0K", false).
                 getJSONArray(SearchType.solarSystem.toString()).get(0);

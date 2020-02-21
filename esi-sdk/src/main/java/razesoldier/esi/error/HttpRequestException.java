@@ -15,14 +15,23 @@
  * http://www.gnu.org/copyleft/gpl.html
  */
 
-package razesoldier.esi.alliance;
+package razesoldier.esi.error;
 
-import razesoldier.esi.error.HttpRequestException;
+import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
+/**
+ * Throws an exception while HTTP requesting
+ */
+public class HttpRequestException extends Exception {
+    public HttpRequestException() {
+        super();
+    }
 
-class ListAllAlliancesTest {
-    void testStr() throws IOException, InterruptedException, HttpRequestException {
-        new ListAllAlliances().getAllAllianceList();
+    public HttpRequestException(String msg) {
+        super(msg);
+    }
+
+    public HttpRequestException(Throwable cause) {
+        super(cause);
     }
 }

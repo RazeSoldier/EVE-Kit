@@ -15,50 +15,41 @@
  * http://www.gnu.org/copyleft/gpl.html
  */
 
-package razesoldier.esi.alliance;
+package razesoldier.esi.universe;
 
+import com.alibaba.fastjson.JSON;
+import org.jetbrains.annotations.NotNull;
 import razesoldier.esi.error.HttpRequestException;
 import razesoldier.esi.error.Non200CodeException;
 import razesoldier.esi.internal.HttpClientFactory;
-import razesoldier.esi.error.InvalidStringException;
-import razesoldier.esi.internal.StrArray2List;
 import razesoldier.esi.sso.ApiEntryPoint;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.List;
 
-/**
- * List all alliances
- * API version: v1
- */
-public class ListAllAlliances {
+public class GetSystemInfo {
     private ApiEntryPoint entryPoint;
 
-    public ListAllAlliances() {
+    public GetSystemInfo() {
         entryPoint = ApiEntryPoint.Tranquility;
     }
 
-    public List<String> getAllAllianceList() throws HttpRequestException {
-        final String url = String.format("https://esi.evetech.net/v1/alliances/?datasource=%s", entryPoint);
-        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
+    public SystemInfoModel query(@NotNull Integer id) throws HttpRequestException {
+        final String endpoint = "https://esi.evetech.net/v4/universe/systems/%d/?datasource=%s";
+        final String url = String.format(endpoint, id, entryPoint);
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url))
+                .build();
         HttpResponse<String> response;
         try {
-            response = HttpClientFactory.getInstance().getHttpClient()
-                    .send(request, HttpResponse.BodyHandlers.ofString());
+            response = HttpClientFactory.getInstance().getHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
             throw new HttpRequestException(e);
         }
         if (response.statusCode() != 200) {
             throw new Non200CodeException(url, response.statusCode(), response.body());
         }
-
-        try {
-            return StrArray2List.convert(response.body());
-        } catch (InvalidStringException e) {
-            throw new HttpRequestException(e);
-        }
+        return JSON.parseObject(response.body(), SystemInfoModel.class);
     }
 }

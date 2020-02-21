@@ -15,14 +15,34 @@
  * http://www.gnu.org/copyleft/gpl.html
  */
 
-package razesoldier.esi.alliance;
+package razesoldier.esi.universe;
 
-import razesoldier.esi.error.HttpRequestException;
+public class PositionModel {
+    private Double x;
+    private Double y;
+    private Double z;
 
-import java.io.IOException;
+    public Double getX() {
+        return x;
+    }
 
-class ListAllAlliancesTest {
-    void testStr() throws IOException, InterruptedException, HttpRequestException {
-        new ListAllAlliances().getAllAllianceList();
+    public void setX(Double x) {
+        this.x = x;
+    }
+
+    public Double getY() {
+        return y;
+    }
+
+    public void setY(Double y) {
+        this.y = y;
+    }
+
+    public Double getZ() {
+        return z;
+    }
+
+    public void setZ(Double z) {
+        this.z = z;
     }
 }

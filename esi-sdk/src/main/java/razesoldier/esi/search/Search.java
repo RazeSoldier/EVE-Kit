@@ -21,8 +21,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
-import razesoldier.esi.error.ConnectionException;
+import razesoldier.esi.error.HttpRequestException;
+import razesoldier.esi.error.Non200CodeException;
 import razesoldier.esi.internal.HttpClientFactory;
+import razesoldier.esi.error.InvalidStringException;
 import razesoldier.esi.sso.ApiEntryPoint;
 
 import java.io.IOException;
@@ -44,15 +46,26 @@ public class Search {
      * @param entities Type of entities to search for
      * @param text The string to search on
      * @param strict Whether the search should be a strict match
+     * @throws InvalidStringException Throw an exception when the length of the search string less than 2
      */
-    public JSONObject doSearch(@NotNull SearchType[] entities, @NotNull String text, boolean strict) throws ConnectionException {
+    public JSONObject doSearch(@NotNull SearchType[] entities, @NotNull String text, boolean strict)
+            throws HttpRequestException, InvalidStringException {
+        // The length of the search string must be greater than 2 due to the limitation of ESI
+        if (text.length() < 3) {
+            throw new InvalidStringException("The length of the search string must be greater than 2");
+        }
+
+        final String url = generateUrl(entities, text, strict);
         HttpRequest request = HttpRequest.newBuilder().
-                uri(URI.create(generateUrl(entities, text, strict))).build();
+                uri(URI.create(url)).build();
         HttpResponse<String> response;
         try {
             response = HttpClientFactory.getInstance().getHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
-            throw new ConnectionException(e);
+            throw new HttpRequestException(e);
+        }
+        if (response.statusCode() != 200) {
+            throw new Non200CodeException(url, response.statusCode(), response.body());
         }
         return JSON.parseObject(response.body());
     }

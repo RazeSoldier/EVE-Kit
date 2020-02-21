@@ -18,5 +18,5 @@
 module razesoldier.eve.kmtracker {
     requires javafx.controls;
 
-     exports razesoldier.eve.kmtracker.gui to javafx.graphics;
+    exports razesoldier.eve.kmtracker.gui to javafx.graphics;
 }

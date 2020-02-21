@@ -15,7 +15,7 @@
  * http://www.gnu.org/copyleft/gpl.html
  */
 
-package razesoldier.esi.character;
+package razesoldier.esi.corporation;
 
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.time.FastDateFormat;
@@ -34,21 +34,21 @@ import java.time.ZoneId;
 import java.util.TimeZone;
 
 /**
- * Get public information about a character
- * Api version: v4
+ * Get a public information about a corporation
  */
-public class GetCharacterInfo {
+public class GetCorporationInfo {
     private ApiEntryPoint entryPoint;
 
-    public GetCharacterInfo() {
+    public GetCorporationInfo() {
         entryPoint = ApiEntryPoint.Tranquility;
     }
 
-    @NotNull
-    public CharacterInfo getInfo(@NotNull Integer id) throws HttpRequestException, ParseException {
-        final String endpoint = "https://esi.evetech.net/v4/characters/%d/?datasource=" + entryPoint;
-        final String url = String.format(endpoint, id);
-        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
+    public CorporationInfo query(@NotNull Integer id) throws HttpRequestException, ParseException {
+        final String endpoint = "https://esi.evetech.net/v4/corporations/%d/?datasource=%s";
+        final String url = String.format(endpoint, id, entryPoint);
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .build();
         HttpResponse<String> response;
         try {
             response = HttpClientFactory.getInstance().getHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
@@ -58,21 +58,24 @@ public class GetCharacterInfo {
         if (response.statusCode() != 200) {
             throw new Non200CodeException(url, response.statusCode(), response.body());
         }
-
-        CharacterInfoModel model = JSON.parseObject(response.body(), CharacterInfoModel.class);
-        CharacterInfo info = new CharacterInfo();
+        CorporationInfoModel model = JSON.parseObject(response.body(), CorporationInfoModel.class);
+        CorporationInfo info = new CorporationInfo();
         info.setAllianceId(model.getAlliance_id());
-        info.setAncestryId(model.getAncestry_id());
-        info.setBirthday(FastDateFormat.getInstance("yyyy-MM-dd'T'HH:mm:ss'Z'", TimeZone.getTimeZone("UTC+0")).
-                parse(model.getBirthday()).toInstant().atZone(ZoneId.of("UTC+0")));
-        info.setBloodlineId(model.getBloodline_id());
-        info.setCorporationId(model.getCorporation_id());
+        info.setCeoId(model.getCeo_id());
+        info.setCreatorId(model.getCreator_id());
+        if (model.getDate_founded() != null) {
+            info.setDateFounded(FastDateFormat.getInstance("yyyy-MM-dd'T'HH:mm:ss'Z'", TimeZone.getTimeZone("UTC+0")).
+                    parse(model.getDate_founded()).toInstant().atZone(ZoneId.of("UTC+0")));
+        }
         info.setDescription(model.getDescription());
-        info.setGender(Gender.newByText(model.getGender()));
+        info.setHomeStationId(model.getHome_station_id());
+        info.setMemberCount(model.getMember_count());
         info.setName(model.getName());
-        info.setRaceId(model.getRace_id());
-        info.setSecurityStatus(model.getSecurity_status());
-        info.setTitle(model.getTitle());
+        info.setShares(model.getShares());
+        info.setTaxRate(model.getTax_rate());
+        info.setTicker(model.getTicker());
+        info.setUrl(model.getUrl());
+        info.setWarEligible(model.getWar_eligible());
         return info;
     }
 }

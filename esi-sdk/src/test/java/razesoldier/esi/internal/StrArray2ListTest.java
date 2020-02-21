@@ -18,6 +18,7 @@
 package razesoldier.esi.internal;
 
 import org.junit.jupiter.api.Test;
+import razesoldier.esi.error.InvalidStringException;
 
 import java.util.Arrays;
 

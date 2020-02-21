@@ -17,13 +17,12 @@
 
 package razesoldier.esi.status;
 
-import org.junit.jupiter.api.Test;
-import razesoldier.esi.error.ConnectionException;
+import razesoldier.esi.error.HttpRequestException;
 
 import java.text.ParseException;
 
 class GetGameStatusTest {
-    void testGetPlayerCount() throws ConnectionException, ParseException {
+    void testGetPlayerCount() throws HttpRequestException, ParseException {
         System.out.println(new GetGameStatus().getStartTime());
     }
 }

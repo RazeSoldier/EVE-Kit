@@ -33,13 +33,6 @@ import java.util.Map;
  * Note: This implementation is not stable!
  */
 public class GetNotifications {
-    public static void main(String[] argv) throws GetAccessTokenException, FetchProtectedResourceException {
-        SSOLogin login = new SSOLogin("81fc45796d15491db2909c2d40f63fc3", "http://localhost/");
-        login.setRefreshToken("CjX8cRjmNkOC79LRD2fWrQ==").fetchRefreshingCode("esi-characters.read_notifications.v1");
-        GetNotifications obj = new GetNotifications(login);
-        obj.query(2112309917).forEach(System.out::println);
-    }
-
     private ApiEntryPoint entryPoint;
     private SSOLogin login;
 

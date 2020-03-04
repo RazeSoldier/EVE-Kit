@@ -15,26 +15,17 @@
  * http://www.gnu.org/copyleft/gpl.html
  */
 
-package razesoldier.eve.kmtracker.gui;
+package razesoldier.esi.universe;
 
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
+import org.junit.jupiter.api.Test;
+import razesoldier.esi.error.HttpRequestException;
 
-public class GuiEntry extends Application {
-    public static void main(String[] argv) {
-        launch();
-    }
+import static org.junit.jupiter.api.Assertions.*;
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        String javaVersion = System.getProperty("java.version");
-        String javafxVersion = System.getProperty("javafx.version");
-        Label l = new Label("Hello, JavaFX " + javafxVersion + ", running on Java " + javaVersion + ".");
-        Scene scene = new Scene(new StackPane(l), 640, 480);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+public class GetItemTypeInfoTest {
+    @Test
+    void testQuery() throws HttpRequestException {
+        GetItemTypeInfo obj = new GetItemTypeInfo();
+        assertEquals("安塞波跳跃星门", obj.query(35841).name);
     }
 }

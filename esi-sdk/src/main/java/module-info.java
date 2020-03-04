@@ -37,6 +37,7 @@ module razesoldier.esi {
     exports razesoldier.esi.error;
     exports razesoldier.esi.killmail;
     exports razesoldier.esi.mail;
+    exports razesoldier.esi.model; // The client shouldn't call the class in this package because Fastjson library is automatic module.
     exports razesoldier.esi.search;
     exports razesoldier.esi.sso;
     exports razesoldier.esi.status;

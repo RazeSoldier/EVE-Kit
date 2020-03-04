@@ -15,8 +15,14 @@
  * http://www.gnu.org/copyleft/gpl.html
  */
 
-module razesoldier.eve.kmtracker {
-    requires javafx.controls;
+package razesoldier.esi.model;
 
-    exports razesoldier.eve.kmtracker.gui to javafx.graphics;
+/**
+ * @version v1
+ */
+public class GameStatusModel {
+    public Integer players;
+    public String server_version;
+    public String start_time;
+    public Boolean vip;
 }

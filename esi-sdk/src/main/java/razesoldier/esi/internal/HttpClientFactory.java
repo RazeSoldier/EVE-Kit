@@ -18,8 +18,14 @@
 package razesoldier.esi.internal;
 
 import org.jetbrains.annotations.NotNull;
+import razesoldier.esi.error.HttpRequestException;
+import razesoldier.esi.error.Non200CodeException;
 
+import java.io.IOException;
+import java.net.URI;
 import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 public class HttpClientFactory {
     private static HttpClientFactory instance;
@@ -39,5 +45,24 @@ public class HttpClientFactory {
     @NotNull
     public HttpClient getHttpClient() {
         return httpClient;
+    }
+
+    public static HttpRequest newRequest(@NotNull String url) {
+        return HttpRequest.newBuilder().uri(URI.create(url)).build();
+    }
+
+    @NotNull
+    public static HttpResponse<String> quickRequest(@NotNull String url) throws HttpRequestException {
+        HttpRequest request = newRequest(url);
+        HttpResponse<String> response;
+        try {
+            response = HttpClientFactory.getInstance().getHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException | InterruptedException e) {
+            throw new HttpRequestException(e);
+        }
+        if (response.statusCode() != 200) {
+            throw new Non200CodeException(url, response.statusCode(), response.body());
+        }
+        return response;
     }
 }

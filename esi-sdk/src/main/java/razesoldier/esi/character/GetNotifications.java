@@ -19,6 +19,7 @@ package razesoldier.esi.character;
 
 import com.alibaba.fastjson.JSON;
 import org.jetbrains.annotations.NotNull;
+import razesoldier.esi.error.Non200CodeException;
 import razesoldier.esi.sso.ApiEntryPoint;
 import razesoldier.esi.sso.FetchProtectedResourceException;
 import razesoldier.esi.sso.GetAccessTokenException;
@@ -44,6 +45,9 @@ public class GetNotifications {
     public List<NotificationModel> query(@NotNull Integer uid) throws FetchProtectedResourceException {
         final String url = String.format("https://esi.evetech.net/v5/characters/%d/notifications/?datasource=%s", uid, entryPoint);
         Map<String, String> res = login.fetchProtectedResource(url);
+        if (!res.get("code").equals("200")) {
+            throw new Non200CodeException(url, Integer.parseInt(res.get("code")), res.get("body"));
+        }
 
         return JSON.parseArray(res.get("body"), NotificationModel.class);
     }

@@ -10,7 +10,6 @@ version = 0.1
 
 buildscript {
     apply plugin: 'java-library'
-    apply plugin: 'java-library-distribution'
 }
 
 dependencies {
@@ -44,14 +43,6 @@ compileJava {
                 '--module-path', classpath.asPath,
         ]
         classpath = files()
-    }
-}
-
-distributions {
-    main {
-        contents {
-            from 'build/classes/java/main'
-        }
     }
 }
 

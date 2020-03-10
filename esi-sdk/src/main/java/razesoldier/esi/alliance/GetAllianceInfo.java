@@ -21,13 +21,9 @@ import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.jetbrains.annotations.NotNull;
 import razesoldier.esi.error.HttpRequestException;
-import razesoldier.esi.error.Non200CodeException;
 import razesoldier.esi.internal.HttpClientFactory;
 import razesoldier.esi.sso.ApiEntryPoint;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.text.ParseException;
 import java.time.ZoneId;
@@ -47,18 +43,8 @@ public class GetAllianceInfo {
     public AllianceInfo query(@NotNull Integer id) throws HttpRequestException, ParseException {
         final String endpoint = "https://esi.evetech.net/v3/alliances/%d/?datasource=%s";
         final String url = String.format(endpoint, id, apiEntryPoint);
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .build();
-        HttpResponse<String> response;
-        try {
-            response = HttpClientFactory.getInstance().getHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException | InterruptedException e) {
-            throw new HttpRequestException(e);
-        }
-        if (response.statusCode() != 200) {
-            throw new Non200CodeException(url, response.statusCode(), response.body());
-        }
+        HttpResponse<String> response = HttpClientFactory.quickRequest(url);
+
         AllianceInfoModel model = JSON.parseObject(response.body(), AllianceInfoModel.class);
         AllianceInfo info = new AllianceInfo();
         info.setCreatorCorporationId(model.getCreator_corporation_id());

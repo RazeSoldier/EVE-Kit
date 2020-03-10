@@ -18,7 +18,7 @@
 module razesoldier.esi {
     requires static org.jetbrains.annotations;
     requires java.net.http; // Using build-in Http client
-    requires org.apache.commons.lang3; // Used to handle time convection
+    requires org.apache.commons.lang3; // Used to provide some help function
     requires scribejava.core; // OAuth library
     requires java.desktop; // Used to open the browser
     requires nanohttpd; // build-in server

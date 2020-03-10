@@ -17,24 +17,18 @@
 
 package razesoldier.esi.status;
 
-import com.alibaba.fastjson.JSON;
 import org.jetbrains.annotations.NotNull;
 import razesoldier.esi.error.HttpRequestException;
-import razesoldier.esi.error.Non200CodeException;
-import razesoldier.esi.internal.HttpClientFactory;
+import razesoldier.esi.internal.AbstractGetter;
 import razesoldier.esi.model.GameStatusModel;
 import razesoldier.esi.sso.ApiEntryPoint;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.time.ZonedDateTime;
 
 /**
  * API version: v1
  */
-public class GetGameStatus {
+public class GetGameStatus extends AbstractGetter {
     private ApiEntryPoint entryPoint;
 
     public GetGameStatus() {
@@ -61,9 +55,8 @@ public class GetGameStatus {
     @NotNull
     public GameStatus getStatus() throws HttpRequestException {
         final String url = "https://esi.evetech.net/v1/status/?datasource=" + entryPoint;
-        HttpResponse<String> response = HttpClientFactory.quickRequest(url);
 
-        GameStatusModel model = JSON.parseObject(response.body(), GameStatusModel.class);
+        GameStatusModel model = requestWithoutAuth(url, GameStatusModel.class);
         GameStatus gameStatus = new GameStatus();
         gameStatus.setPlayers(model.players);
         gameStatus.setServerVersion(model.server_version);

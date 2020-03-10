@@ -15,30 +15,27 @@
  * http://www.gnu.org/copyleft/gpl.html
  */
 
-package razesoldier.esi.universe;
+package razesoldier.esi.sso;
 
-import com.alibaba.fastjson.JSON;
 import org.jetbrains.annotations.NotNull;
-import razesoldier.esi.error.HttpRequestException;
-import razesoldier.esi.internal.HttpClientFactory;
-import razesoldier.esi.sso.ApiEntryPoint;
-
-import java.net.http.HttpResponse;
 
 /**
- * Get information on a type
- * Api version: v3
+ * Used to build {@link LoginService}.
  */
-public class GetItemTypeInfo {
-    private ApiEntryPoint entryPoint;
+public class LoginServiceBuilder {
+    private String appId;
 
-    public GetItemTypeInfo() {
-        entryPoint = ApiEntryPoint.Tranquility;
+    public LoginServiceBuilder(@NotNull String appId) {
+        this.appId = appId;
     }
 
-    public ItemTypeInfoModel query(@NotNull Integer id) throws HttpRequestException {
-        final String url = String.format("https://esi.evetech.net/v3/universe/types/%d/?datasource=%s&language=zh", id, entryPoint);
-        HttpResponse<String> response = HttpClientFactory.quickRequest(url);
-        return JSON.parseObject(response.body(), ItemTypeInfoModel.class);
+    /**
+     * Login from refresh token.
+     *
+     * @return
+     */
+    public LoginService newFromRefreshCode(@NotNull String refreshCode) {
+        LoginService loginService = new LoginService(appId);
+        return loginService.setRefreshCode(refreshCode);
     }
 }

@@ -15,29 +15,13 @@
  * http://www.gnu.org/copyleft/gpl.html
  */
 
-package razesoldier.esi.universe;
-
-import org.jetbrains.annotations.NotNull;
-import razesoldier.esi.error.HttpRequestException;
-import razesoldier.esi.internal.AbstractGetter;
-import razesoldier.esi.sso.ApiEntryPoint;
-
+package razesoldier.esi.sso;
 
 /**
- * Get information on a solar system.
- * Api version: v4
+ * Exception thrown if an error which fetching access code.
  */
-public class GetSystemInfo extends AbstractGetter {
-    private ApiEntryPoint entryPoint;
-
-    public GetSystemInfo() {
-        entryPoint = ApiEntryPoint.Tranquility;
-    }
-
-    public SystemInfoModel query(@NotNull Integer id) throws HttpRequestException {
-        final String endpoint = "https://esi.evetech.net/v4/universe/systems/%d/?datasource=%s";
-        final String url = String.format(endpoint, id, entryPoint);
-
-        return requestWithoutAuth(url, SystemInfoModel.class);
+public class FetchAccessCodeException extends Exception {
+    FetchAccessCodeException(Throwable cause) {
+        super(cause);
     }
 }

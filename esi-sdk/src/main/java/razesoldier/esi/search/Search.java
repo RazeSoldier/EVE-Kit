@@ -22,17 +22,14 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import razesoldier.esi.error.HttpRequestException;
-import razesoldier.esi.error.Non200CodeException;
-import razesoldier.esi.internal.HttpClientFactory;
 import razesoldier.esi.error.InvalidStringException;
+import razesoldier.esi.internal.HttpClientFactory;
 import razesoldier.esi.sso.ApiEntryPoint;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 /**
+ * Search for entities that match a given sub-string.
  * Api version: v2
  */
 public class Search {
@@ -56,17 +53,7 @@ public class Search {
         }
 
         final String url = generateUrl(entities, text, strict);
-        HttpRequest request = HttpRequest.newBuilder().
-                uri(URI.create(url)).build();
-        HttpResponse<String> response;
-        try {
-            response = HttpClientFactory.getInstance().getHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException | InterruptedException e) {
-            throw new HttpRequestException(e);
-        }
-        if (response.statusCode() != 200) {
-            throw new Non200CodeException(url, response.statusCode(), response.body());
-        }
+        HttpResponse<String> response = HttpClientFactory.quickRequest(url);
         return JSON.parseObject(response.body());
     }
 

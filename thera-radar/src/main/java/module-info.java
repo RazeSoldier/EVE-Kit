@@ -26,5 +26,6 @@ module razesoldier.thera.radar {
     requires jodd.mail;
     // Because jodd.mail can't automatically require jodd.mail, so explicit required
     requires jakarta.mail;
+    requires org.slf4j;
     requires razesoldier.esi;
 }

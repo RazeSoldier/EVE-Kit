@@ -19,6 +19,7 @@ package razesoldier.thera.radar;
 
 import com.alibaba.fastjson.JSON;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 import razesoldier.thera.radar.alarm.Alarm;
 import razesoldier.thera.radar.alarm.AlarmException;
 import razesoldier.thera.radar.api.ApiFactory;
@@ -29,12 +30,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Radar {
+    private Logger logger;
     private String watchSystemName;
     private List<Alarm> alarmList = new ArrayList<>();
     private List<Integer> recordList = new ArrayList<>();
 
-    public Radar(@NotNull String watchSystemName) {
+    public Radar(@NotNull String watchSystemName, @NotNull Logger logger) {
         this.watchSystemName = watchSystemName;
+        this.logger = logger;
     }
 
     public void addAlarm(@NotNull Alarm alarm) {
@@ -66,12 +69,12 @@ public class Radar {
     private void alarm(@NotNull String watchSystemName, @NotNull String dstSystem, @NotNull Integer jumps,
                        @NotNull Integer id) {
         recordList.add(id);
-        System.out.format("%s is %d jumps from %s\n", dstSystem, jumps, watchSystemName);
+        logger.info(String.format("%s is %d jumps from %s\n", dstSystem, jumps, watchSystemName));
         alarmList.forEach(alarm -> {
             try {
                 alarm.sendAlarm(watchSystemName, dstSystem, jumps);
             } catch (AlarmException e) {
-                e.printStackTrace();
+                logger.error(e.toString());
             }
         });
     }

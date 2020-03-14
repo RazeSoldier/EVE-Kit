@@ -19,6 +19,8 @@ package razesoldier.thera.radar;
 
 import com.alibaba.fastjson.JSON;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import razesoldier.esi.sso.SSOLogin;
 import razesoldier.thera.radar.alarm.GameMailAlarm;
 import razesoldier.thera.radar.alarm.MailAlarm;
@@ -50,6 +52,16 @@ public class Daemon {
             return;
         }
 
+        String debugLevel;
+        if (argvMap.get("debug").equals("true")) {
+            debugLevel = "debug";
+        } else {
+            debugLevel = "info";
+        }
+        System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", debugLevel);
+        System.setProperty("org.slf4j.simpleLogger.showDateTime", "true");
+        Logger logger = LoggerFactory.getLogger("thera-radar");
+
         final String configText;
         try {
             configText = Files.readString(configFile.toPath());
@@ -66,7 +78,7 @@ public class Daemon {
 
         final String watchSystemName = configModel.watchSystemName;
         final String scope = "esi-mail.send_mail.v1";
-        Radar radar = new Radar(watchSystemName);
+        Radar radar = new Radar(watchSystemName, logger);
         if (mailConfig != null) {
             radar.addAlarm(
                     new MailAlarm(mailConfig.recipient, mailConfig.host, mailConfig.username, mailConfig.password, mailConfig.senderName)
@@ -81,8 +93,11 @@ public class Daemon {
             radar.addAlarm(new QQAlarm(qqConfig.recipientGroup));
         }
 
+        // Start main part
+        logger.info("Started thera-radar");
         //noinspection InfiniteLoopStatement
         while (true) {
+            logger.debug("Watch process start");
             try {
                 radar.echo();
             } catch (ConnectionException e) {
@@ -90,6 +105,7 @@ public class Daemon {
                 e.printStackTrace();
             }
             try {
+                logger.debug("Watch process end");
                 Thread.sleep(1000 * 120); // Sleep 2 minutes
             } catch (InterruptedException e) {
                 System.out.println(e.getMessage());
@@ -104,25 +120,28 @@ public class Daemon {
     @NotNull
     private static Map<String, String> parseArgv(@NotNull String[] argv) throws Exception {
         boolean hasConfig = false;
+        boolean isDebug = false;
         String configFilePath = null;
         // 必须指定一个配置文件（--config-path）
         for (String value : argv) {
             if (hasConfig) {
                 configFilePath = value;
+                hasConfig = false;
             }
-            if (value.indexOf("--config-path") != 0) {
+            if (value.indexOf("--config-path") == 0) {
+                hasConfig = true;
                 continue;
             }
-            hasConfig = true;
-        }
-        if (!hasConfig) {
-            throw new Exception("--config-path must be specified");
+            if (value.indexOf("--debug") == 0) {
+                isDebug = true;
+            }
         }
         if (configFilePath == null) {
             throw new Exception("--config-path must be specified a value");
         }
         Map<String, String> argvMap = new HashMap<>();
         argvMap.put("configPath", configFilePath);
+        argvMap.put("debug", String.valueOf(isDebug));
         return argvMap;
     }
 }

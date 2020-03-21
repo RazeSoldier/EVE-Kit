@@ -22,6 +22,7 @@ import org.apache.commons.lang3.time.FastDateFormat;
 import org.jetbrains.annotations.NotNull;
 import razesoldier.esi.error.HttpRequestException;
 import razesoldier.esi.internal.HttpClientFactory;
+import razesoldier.esi.model.CorporationInfoModel;
 import razesoldier.esi.sso.ApiEntryPoint;
 
 import java.net.http.HttpResponse;
@@ -46,22 +47,22 @@ public class GetCorporationInfo {
 
         CorporationInfoModel model = JSON.parseObject(response.body(), CorporationInfoModel.class);
         CorporationInfo info = new CorporationInfo();
-        info.setAllianceId(model.getAlliance_id());
-        info.setCeoId(model.getCeo_id());
-        info.setCreatorId(model.getCreator_id());
-        if (model.getDate_founded() != null) {
+        info.setAllianceId(model.alliance_id);
+        info.setCeoId(model.ceo_id);
+        info.setCreatorId(model.creator_id);
+        if (model.date_founded != null) {
             info.setDateFounded(FastDateFormat.getInstance("yyyy-MM-dd'T'HH:mm:ss'Z'", TimeZone.getTimeZone("UTC+0")).
-                    parse(model.getDate_founded()).toInstant().atZone(ZoneId.of("UTC+0")));
+                    parse(model.date_founded).toInstant().atZone(ZoneId.of("UTC+0")));
         }
-        info.setDescription(model.getDescription());
-        info.setHomeStationId(model.getHome_station_id());
-        info.setMemberCount(model.getMember_count());
-        info.setName(model.getName());
-        info.setShares(model.getShares());
-        info.setTaxRate(model.getTax_rate());
-        info.setTicker(model.getTicker());
-        info.setUrl(model.getUrl());
-        info.setWarEligible(model.getWar_eligible());
+        info.setDescription(model.description);
+        info.setHomeStationId(model.home_station_id);
+        info.setMemberCount(model.member_count);
+        info.setName(model.name);
+        info.setShares(model.shares);
+        info.setTaxRate(model.tax_rate);
+        info.setTicker(model.ticker);
+        info.setUrl(model.url);
+        info.setWarEligible(model.war_eligible);
         return info;
     }
 }

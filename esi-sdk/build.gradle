@@ -20,7 +20,7 @@ dependencies {
     implementation 'com.github.scribejava:scribejava-core:6.9.0'
 
     // Used to parse Json
-    implementation 'com.alibaba:fastjson:1.2.61'
+    api 'com.alibaba:fastjson:1.2.61'
 
     // Used to create a build-in server
     implementation 'org.nanohttpd:nanohttpd:2.2.0'

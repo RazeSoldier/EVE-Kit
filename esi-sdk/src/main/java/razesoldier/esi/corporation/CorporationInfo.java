@@ -30,7 +30,7 @@ public class CorporationInfo {
     private Integer homeStationId;
     private Integer memberCount;
     private String name;
-    private Integer shares;
+    private Long shares;
     private Float taxRate;
     private String ticker;
     private String url;
@@ -101,11 +101,11 @@ public class CorporationInfo {
         this.name = name;
     }
 
-    public Integer getShares() {
+    public Long getShares() {
         return shares;
     }
 
-    void setShares(Integer shares) {
+    void setShares(Long shares) {
         this.shares = shares;
     }
 

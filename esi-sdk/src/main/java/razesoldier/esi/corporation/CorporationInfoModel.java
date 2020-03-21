@@ -28,7 +28,7 @@ public class CorporationInfoModel {
     private Integer home_station_id;
     private Integer member_count;
     private String name;
-    private Integer shares;
+    private Long shares;
     private Float tax_rate;
     private String ticker;
     private String url;
@@ -99,11 +99,11 @@ public class CorporationInfoModel {
         this.name = name;
     }
 
-    public Integer getShares() {
+    public Long getShares() {
         return shares;
     }
 
-    public void setShares(Integer shares) {
+    public void setShares(Long shares) {
         this.shares = shares;
     }
 

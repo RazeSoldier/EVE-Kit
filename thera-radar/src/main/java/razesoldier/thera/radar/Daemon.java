@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.*;
 
 public class Daemon {
     public static void main(String[] argv) {
@@ -93,16 +94,25 @@ public class Daemon {
             radar.addAlarm(new QQAlarm(qqConfig.recipientGroup));
         }
 
-        // Start main part
-        logger.info("Started thera-radar");
-        //noinspection InfiniteLoopStatement
-        while (true) {
-            logger.debug("Watch process start");
+        Runnable task = () -> {
             try {
                 radar.echo();
             } catch (ConnectionException e) {
                 System.out.println(e.getMessage());
                 e.printStackTrace();
+            }
+        };
+        // Start main part
+        logger.info("Started thera-radar");
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        //noinspection InfiniteLoopStatement
+        while (true) {
+            logger.debug("Watch process start");
+            try {
+                Future<?> future = executorService.submit(task);
+                future.get(2, TimeUnit.MINUTES);
+            } catch (InterruptedException | ExecutionException | TimeoutException e) {
+                logger.warn(e.toString());
             }
             try {
                 logger.debug("Watch process end");

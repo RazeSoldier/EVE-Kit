@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import razesoldier.thera.radar.alarm.Alarm;
 import razesoldier.thera.radar.alarm.AlarmException;
+import razesoldier.thera.radar.api.Api;
 import razesoldier.thera.radar.api.ApiFactory;
 import razesoldier.thera.radar.api.ConnectionException;
 import razesoldier.thera.radar.model.WormholeModel;
@@ -34,6 +35,7 @@ public class Radar {
     private String watchSystemName;
     private List<Alarm> alarmList = new ArrayList<>();
     private List<Integer> recordList = new ArrayList<>();
+    private Api api = ApiFactory.newInstance();
 
     public Radar(@NotNull String watchSystemName, @NotNull Logger logger) {
         this.watchSystemName = watchSystemName;
@@ -45,7 +47,7 @@ public class Radar {
     }
 
     public void echo() throws ConnectionException {
-        String json = ApiFactory.newInstance().query(watchSystemName);
+        String json = api.query(watchSystemName);
         List<WormholeModel> list = JSON.parseArray(json, WormholeModel.class);
         for (WormholeModel model : list) {
             if (recordList.contains(model.getId())) {

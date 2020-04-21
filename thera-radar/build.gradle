@@ -1,4 +1,4 @@
-version = 0.4
+version = "0.4.1"
 
 buildscript {
     repositories {
@@ -20,9 +20,8 @@ application {
     mainClassName = "razesoldier.thera.radar.Daemon"
     applicationDefaultJvmArgs = [
             '-Dfile.encoding=UTF-8',
-            '-Xmx32m'
+            '-Xmx64m'
     ]
-
 }
 
 dependencies {

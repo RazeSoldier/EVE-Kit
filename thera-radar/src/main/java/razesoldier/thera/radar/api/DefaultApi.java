@@ -24,15 +24,17 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 
 class DefaultApi implements Api {
     public String query(@NotNull String systemSearch) throws ConnectionException {
         final String apiEndpoint = "https://www.eve-scout.com/api/wormholes?systemSearch=%s";
         HttpRequest request = HttpRequest.newBuilder().uri(URI.create(String.format(apiEndpoint, systemSearch)))
-                .build();
+                .timeout(Duration.ofMinutes(1)).build();
         HttpResponse<String> response;
         try {
-            response = HttpClient.newBuilder().build().send(request, HttpResponse.BodyHandlers.ofString());
+            response = HttpClient.newBuilder().connectTimeout(Duration.ofMinutes(1)).build()
+                    .send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
             throw new ConnectionException(e);
         }

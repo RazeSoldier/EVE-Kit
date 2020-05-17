@@ -25,9 +25,6 @@ application {
 }
 
 dependencies {
-    // Just an annotation library
-    implementation group: 'org.jetbrains', name: 'annotations', version: '17.0.0'
-
     // Used to parse Json
     implementation 'com.alibaba:fastjson:1.2.61'
 

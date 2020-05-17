@@ -30,8 +30,8 @@ import razesoldier.esi.sso.GetAccessTokenException;
 import razesoldier.esi.sso.SSOLogin;
 
 public class GameMailAlarm implements Alarm {
-    private Integer senderId;
-    private SSOLogin login;
+    private final Integer senderId;
+    private final SSOLogin login;
 
     public GameMailAlarm(@NotNull Integer senderId, @NotNull SSOLogin login) {
         this.senderId = senderId;
@@ -49,7 +49,10 @@ public class GameMailAlarm implements Alarm {
         SendMail sender = new SendMail();
         Mail mail = new Mail();
         mail.setSenderId(senderId);
-        mail.setSubject(String.format("【席拉预警】一个席拉洞在%s %d跳外", watchSystemName, jumps));
+        mail.setSubject(String.format(
+                "【席拉预警】一个席拉洞在%s %d跳外/[Thera WH Alarm] A Thera WH at %s",
+                watchSystemName, jumps, watchSystemName)
+        );
 
         Search search = new Search();
         Integer id = null;
@@ -58,9 +61,14 @@ public class GameMailAlarm implements Alarm {
                     .getJSONArray("solar_system").get(0);
         } catch (HttpRequestException e) {
             throw new AlarmException(e);
-        } catch (InvalidStringException ignored) {}
+        } catch (InvalidStringException ignored) {
+        }
         dstSystem = String.format("<font size=\"12\" color=\"#ffd98d00\"><a href=\"showinfo:5//%d\">%s</a></font>", id, dstSystem);
-        mail.setBody(String.format("%s星系的席拉洞距离%s %d跳。\n\n此邮件通过ESI发送", dstSystem, watchSystemName, jumps));
+        var body = "%s星系的席拉洞距离%s %d跳。\n\n此邮件通过ESI发送-------English version:\n" +
+                "A Thera wormhole at %s from %d jumps from 4LNE\n\nThis mail send by bot via ESI";
+        mail.setBody(String.format(
+                body, dstSystem, watchSystemName, jumps, dstSystem, jumps
+        ));
         mail.addRecipient(new Recipient(Recipient.RecipientType.MailingList, 145218873));
         try {
             sender.send(mail, login);

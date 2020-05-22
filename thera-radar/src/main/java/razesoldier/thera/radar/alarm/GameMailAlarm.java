@@ -51,7 +51,7 @@ public class GameMailAlarm implements Alarm {
         mail.setSenderId(senderId);
         mail.setSubject(String.format(
                 "【席拉预警】一个席拉洞在%s %d跳外/[Thera WH Alarm] A Thera WH at %s",
-                watchSystemName, jumps, watchSystemName)
+                watchSystemName, jumps, dstSystem)
         );
 
         Search search = new Search();
@@ -64,7 +64,7 @@ public class GameMailAlarm implements Alarm {
         } catch (InvalidStringException ignored) {
         }
         dstSystem = String.format("<font size=\"12\" color=\"#ffd98d00\"><a href=\"showinfo:5//%d\">%s</a></font>", id, dstSystem);
-        var body = "%s星系的席拉洞距离%s %d跳。\n\n此邮件通过ESI发送-------English version:\n" +
+        var body = "%s星系的席拉洞距离%s %d跳。\n\n此邮件通过ESI发送\n-------\n" +
                 "A Thera wormhole at %s from %d jumps from 4LNE\n\nThis mail send by bot via ESI";
         mail.setBody(String.format(
                 body, dstSystem, watchSystemName, jumps, dstSystem, jumps

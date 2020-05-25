@@ -24,9 +24,9 @@ import jodd.mail.SmtpServer;
 import org.jetbrains.annotations.NotNull;
 
 public class MailAlarm implements Alarm {
-    private String recipient;
-    private SmtpServer smtpServer;
-    private String senderName;
+    private final String recipient;
+    private final SmtpServer smtpServer;
+    private final String senderName;
 
     public MailAlarm(@NotNull String recipient, @NotNull String host, @NotNull String username, @NotNull String password,
                      @NotNull String senderName) {
@@ -35,11 +35,15 @@ public class MailAlarm implements Alarm {
         smtpServer = MailServer.create().host(host).auth(username, password).buildSmtpMailServer();
     }
 
-    public void sendAlarm(@NotNull String watchSystemName, @NotNull String dstSystem, @NotNull Integer jumps) {
-        SendMailSession session = smtpServer.createSession();
-        session.open();
-        session.sendMail(buildMail(watchSystemName, dstSystem, jumps));
-        session.close();
+    public void sendAlarm(@NotNull String watchSystemName, @NotNull String dstSystem, @NotNull Integer jumps) throws AlarmException {
+        try {
+            SendMailSession session = smtpServer.createSession();
+            session.open();
+            session.sendMail(buildMail(watchSystemName, dstSystem, jumps));
+            session.close();
+        } catch (Exception e) {
+            throw new AlarmException(e);
+        }
     }
 
     private Email buildMail(@NotNull String watchSystemName, @NotNull String dstSystem, @NotNull Integer jumps) {

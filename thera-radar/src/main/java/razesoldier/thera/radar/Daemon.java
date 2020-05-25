@@ -98,8 +98,7 @@ public class Daemon {
             try {
                 radar.echo();
             } catch (ConnectionException e) {
-                System.out.println(e.getMessage());
-                e.printStackTrace();
+                logger.warn(e.toString());
             }
         };
         // Start main part

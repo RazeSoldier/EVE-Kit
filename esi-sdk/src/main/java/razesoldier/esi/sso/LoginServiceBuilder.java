@@ -21,6 +21,16 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Used to build {@link LoginService}.
+ *
+ * <h2>Build Way</h2>
+ * The builder provides two ways to build the service.
+ * <h3>Reuse refresh code</h3>
+ * <pre>
+ * LoginServiceBuilder builder = new LoginServiceBuilder(appId);
+ * LoginService service = {@link LoginServiceBuilder#newFromRefreshToken(String) builder.newFromRefreshToken(code)};
+ * </pre>
+ * Refresh tokens can be obtained from previous login, or other sources.
+ * <h3>Fresh new Login</h3>
  */
 public class LoginServiceBuilder {
     private String appId;

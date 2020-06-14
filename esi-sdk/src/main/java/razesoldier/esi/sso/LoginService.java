@@ -28,26 +28,15 @@ import org.jetbrains.annotations.NotNull;
 import razesoldier.esi.model.ResourceOwnerDetailModel;
 
 import java.io.IOException;
-import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.concurrent.ExecutionException;
 
 /**
  * Main entry that used to login ESI.
- * For login step, see <a href="https://docs.esi.evetech.net/docs/sso/native_sso_flow.html">docs</a>.
+ * For login step, see <a href="https://docs.esi.evetech.net/docs/sso/native_sso_flow.html">docs</a>.<br>
+ * Using {@link LoginServiceBuilder} to build the service.
  */
 public class LoginService {
-    public static void main(String[] argv) throws FetchAccessCodeException, FetchProtectedResourceException {
-        final String vvvjjj = "3WDhU7BR1B8OYTA_p4iUGXyPdqNbJBd7sfCHOnUYxG0";
-        LoginService loginService = new LoginServiceBuilder("50514d86188542438ce6c5c3a21eeb62").newFromRefreshCode(vvvjjj);
-        loginService.fetchAccessCode();
-        System.out.println(loginService.accessToken.getAccessToken());
-    }
-
-    /**
-     * The primary reason for using the state parameter is to mitigate CSRF attacks.
-     */
-    private final String secretState = "secret" + new SecureRandom().nextInt(999_999);
     private final OAuth20Service service; // ESI use OAuth 2.0
     private OAuth2AccessToken accessToken = new OAuth2AccessToken("");
     /**

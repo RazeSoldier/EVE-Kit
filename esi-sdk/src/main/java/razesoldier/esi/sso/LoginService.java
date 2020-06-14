@@ -53,7 +53,7 @@ public class LoginService {
     public ResourceOwnerDetail getResourceOwnerDetails() throws FetchProtectedResourceException {
         final String url = "https://login.eveonline.com/oauth/verify";
         final OAuthRequest request = new OAuthRequest(Verb.GET, url);
-        if (Instant.now().isAfter(expiresTime)) {
+        if (!checkAccessTokenIsValid()) {
             try {
                 fetchAccessCode();
             } catch (FetchAccessCodeException e) {
@@ -68,6 +68,7 @@ public class LoginService {
         }
     }
 
+    // There method should be call from the builder @{
     LoginService(@NotNull String appId) {
         service = new ServiceBuilder(appId).build(new TranquilityAPI());
     }
@@ -75,15 +76,27 @@ public class LoginService {
     LoginService(@NotNull String appId, @NotNull String defaultScope) {
         service = new ServiceBuilder(appId).defaultScope(defaultScope).build(new TranquilityAPI());
     }
+    // @}
 
-    LoginService setRefreshCode(@NotNull String refreshCode) {
-        accessToken = new OAuth2AccessToken(accessToken.getAccessToken(), null, null, refreshCode,
+    LoginService setRefreshToken(@NotNull String refreshToken) {
+        accessToken = new OAuth2AccessToken(accessToken.getAccessToken(), null, null, refreshToken,
                 null, null);
         return this;
     }
 
+    // Help function:
+
     /**
-     * Fetch a new access code from the refresh code
+     * Checks if the access token have not expires.
+     *
+     * @return Returns TRUE if the access token have not expires
+     */
+    private boolean checkAccessTokenIsValid() {
+        return Instant.now().isBefore(expiresTime);
+    }
+
+    /**
+     * Fetch a new access code from ESI.
      *
      * @throws FetchAccessCodeException Exception thrown if an error which fetching access code.
      */

@@ -33,19 +33,20 @@ import org.jetbrains.annotations.NotNull;
  * <h3>Fresh new Login</h3>
  */
 public class LoginServiceBuilder {
-    private String appId;
+    private final LoginService service;
 
     public LoginServiceBuilder(@NotNull String appId) {
-        this.appId = appId;
+        this.service = new LoginService(appId);
+    }
+
+    public LoginServiceBuilder(@NotNull String appId, @NotNull String defaultScope) {
+        this.service = new LoginService(appId, defaultScope);
     }
 
     /**
      * Login from refresh token.
-     *
-     * @return
      */
-    public LoginService newFromRefreshCode(@NotNull String refreshCode) {
-        LoginService loginService = new LoginService(appId);
-        return loginService.setRefreshCode(refreshCode);
+    public LoginService newFromRefreshToken(@NotNull String refreshCode) {
+        return service.setRefreshToken(refreshCode);
     }
 }

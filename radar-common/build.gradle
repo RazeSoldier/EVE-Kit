@@ -1,0 +1,30 @@
+version 'unspecified'
+
+buildscript {
+    apply plugin: 'java-library'
+}
+
+ext.moduleName = 'razesoldier.everadar'
+
+dependencies {
+    // Use JUnit Jupiter API for testing.
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
+
+    // Use JUnit Jupiter Engine for testing.
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
+}
+
+compileJava {
+    inputs.property("moduleName", moduleName)
+    doFirst {
+        options.compilerArgs = [
+                '--module-path', classpath.asPath,
+        ]
+        classpath = files()
+    }
+}
+
+test {
+    // Use junit platform for unit tests
+    useJUnitPlatform()
+}

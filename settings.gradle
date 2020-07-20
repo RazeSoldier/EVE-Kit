@@ -1,5 +1,6 @@
 rootProject.name = 'EVE_Kit'
 include 'esi-sdk'
-include 'km-tracker'
-//include 'sovereignty-tracker'
 include 'thera-radar'
+include 'sov-radar'
+include 'structure-radar'
+include 'radar-common'

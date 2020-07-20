@@ -1,0 +1,78 @@
+version = "0.1"
+
+buildscript {
+    repositories {
+        maven {
+            url = 'https://plugins.gradle.org/m2/'
+        }
+    }
+    dependencies {
+        classpath "org.openjfx:javafx-plugin:0.0.8"
+        classpath "org.beryx:badass-jlink-plugin:2.17.1"
+    }
+}
+
+apply plugin: 'application'
+apply plugin: 'org.beryx.jlink'
+
+repositories {
+    maven {
+        url = 'https://jitpack.io'
+    }
+}
+
+dependencies {
+    // Used to parse Json
+    implementation 'com.alibaba:fastjson:1.2.61'
+
+    // Use JUnit Jupiter API for testing.
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
+
+    // Use JUnit Jupiter Engine for testing.
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
+
+    implementation project(':radar-common')
+}
+
+ext.moduleName = 'razesoldier.sovradar'
+
+application {
+    mainClassName = "razesoldier.sovradar.Main"
+    applicationDefaultJvmArgs = ['-Xmx256m', '-Xms256m', '-Xmn160m', '-Dfile.encoding=UTF-8']
+}
+
+compileJava {
+    inputs.property("moduleName", moduleName)
+    doFirst {
+        options.compilerArgs = [
+                '--module-path', classpath.asPath,
+        ]
+        classpath = files()
+    }
+}
+
+test {
+    // Use junit platform for unit tests
+    useJUnitPlatform()
+}
+
+tasks.build.doLast {
+    copy {
+        from "$buildDir/resources"
+        into "$buildDir/classes/java"
+    }
+}
+
+jlink {
+    imageName = "sov-radar" + version
+    options = ['--bind-services', '--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+    launcher {
+        name = 'sov-radar'
+        jvmArgs = ['-Xmx256m', '-Xms256m', '-Xmn160m', '-Dfile.encoding=UTF-8']
+    }
+    mergedModule {
+        additive = true
+        excludeProvides servicePattern: 'javax.ws.rs.ext.*'
+        excludeProvides service: 'org.glassfish.jersey.internal.spi.AutoDiscoverable'
+    }
+}

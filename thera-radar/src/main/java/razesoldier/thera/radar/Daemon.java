@@ -91,7 +91,12 @@ public class Daemon {
             radar.addAlarm(new GameMailAlarm(gameMailConfig.senderId, login));
         }
         if (qqConfig != null) {
-            radar.addAlarm(new QQAlarm(qqConfig.recipientGroup));
+            if (qqConfig.coolqIP == null) {
+                System.out.println("qqConfig.coolqIP not set");
+                System.exit(1);
+                return;
+            }
+            radar.addAlarm(new QQAlarm(qqConfig.coolqIP, qqConfig.recipientGroup));
         }
 
         Runnable task = () -> {

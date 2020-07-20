@@ -28,9 +28,11 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 
 public class QQAlarm implements Alarm {
-    private String recipientGroup;
+    private final String coolqIP;
+    private final String recipientGroup;
 
-    public QQAlarm(@NotNull String recipientGroup) {
+    public QQAlarm(@NotNull String coolqIP, @NotNull String recipientGroup) {
+        this.coolqIP = coolqIP;
         this.recipientGroup = recipientGroup;
     }
 
@@ -41,8 +43,8 @@ public class QQAlarm implements Alarm {
         );
 
         String url = String.format(
-                "http://localhost:31091/send_group_msg?group_id=%s&message=%s",
-                recipientGroup, URLEncoder.encode(msg, StandardCharsets.UTF_8)
+                "http://%s/send_group_msg?group_id=%s&message=%s",
+                coolqIP, recipientGroup, URLEncoder.encode(msg, StandardCharsets.UTF_8)
         );
         HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
         try {

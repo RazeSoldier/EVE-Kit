@@ -43,5 +43,6 @@ public class ConfigModel {
 
     public static class QQConfig {
         public String recipientGroup;
+        public String coolqIP;
     }
 }

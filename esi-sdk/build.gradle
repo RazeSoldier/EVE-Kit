@@ -27,18 +27,14 @@ dependencies {
     implementation 'com.github.scribejava:scribejava-core:6.9.0'
 
     // Used to parse Json
-    api 'com.alibaba:fastjson:1.2.61'
+    api 'com.alibaba:fastjson:1.2.72'
 
     // Used to create a build-in server
     implementation 'org.nanohttpd:nanohttpd:2.2.0'
 
     implementation 'org.apache.commons:commons-lang3:3.9'
 
-    // Use JUnit Jupiter API for testing.
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
-
-    // Use JUnit Jupiter Engine for testing.
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
+    testImplementation('org.junit.jupiter:junit-jupiter:5.6.2')
 }
 
 ext.moduleName = 'razesoldier.esi'
@@ -48,7 +44,7 @@ java {
 }
 
 extraJavaModuleInfo {
-    automaticModule("fastjson-1.2.61.jar", "fastjson")
+    automaticModule("fastjson-1.2.72.jar", "fastjson")
     automaticModule("scribejava-core-6.9.0.jar", "scribejava.core")
     automaticModule("nanohttpd-2.2.0.jar", "nanohttpd")
 }

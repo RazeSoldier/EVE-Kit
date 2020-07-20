@@ -9,8 +9,18 @@
 version = 0.1
 
 buildscript {
-    apply plugin: 'java-library'
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "de.jjohannes.gradle:extra-java-module-info:0.1"
+    }
 }
+
+apply plugin: 'java-library'
+apply plugin: "de.jjohannes.extra-java-module-info"
 
 dependencies {
     // OAuth library
@@ -33,14 +43,14 @@ dependencies {
 
 ext.moduleName = 'razesoldier.esi'
 
-compileJava {
-    inputs.property("moduleName", moduleName)
-    doFirst {
-        options.compilerArgs = [
-                '--module-path', classpath.asPath,
-        ]
-        classpath = files()
-    }
+java {
+    modularity.inferModulePath = true
+}
+
+extraJavaModuleInfo {
+    automaticModule("fastjson-1.2.61.jar", "fastjson")
+    automaticModule("scribejava-core-6.9.0.jar", "scribejava.core")
+    automaticModule("nanohttpd-2.2.0.jar", "nanohttpd")
 }
 
 test {

@@ -22,7 +22,6 @@ module razesoldier.esi {
     requires scribejava.core; // OAuth library
     requires java.desktop; // Used to open the browser
     requires nanohttpd; // build-in server
-    requires fastjson; // Json parser
 
     opens razesoldier.esi.alliance to fastjson;
     opens razesoldier.esi.character to fastjson;
